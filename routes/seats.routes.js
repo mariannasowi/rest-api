@@ -3,6 +3,10 @@ const router = express.Router();
 const db = require('../db');
 const { v4: uuidv4 } = require('uuid');
 
+const filterDB = id => (
+  db.seats.filter(content => content.id == id)
+);
+
 router.route('/seats').get((req, res) => {
   res.send(db.seats);
 });
@@ -35,20 +39,14 @@ router.route('/seats').post((req, res) => {
 });
 
 router.route('/seats/:id').put((req, res) => {
-  const { day, seat, client, email } = req.body;
-  const element = db.seats.filter(
-    (element) => element.id === parseInt(req.params.id)
-  );
-  const index = db.seats.indexOf(element);
-  const newSeat = {
-    day: day,
-    seat: seat,
-    client: client,
-    email: email,
-  };
-  db.seats.splice(index, 1, newSeat);
+  filterDB(req.params.id).forEach(content => {
+    content.day = req.body.day;
+    content.seat = req.body.seat;
+    content.client = req.body.client;
+    content.email = req.body.email;
+  });
 
-  return res.json({ message: 'OK' });
+  res.json({message: 'OK'});
 });
 
 router.route('/seats/:id').delete((req, res) => {

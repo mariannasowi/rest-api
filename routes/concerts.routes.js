@@ -3,6 +3,10 @@ const router = express.Router();
 const db = require('../db');
 const { v4: uuidv4 } = require('uuid');
 
+const filterDB = id => (
+  db.concerts.filter(content => content.id == id)
+);
+
 router.route('/concerts').get((req, res) => {
   res.send(db.concerts);
 });
@@ -36,22 +40,15 @@ router.route('/concerts').post((req, res) => {
 });
 
 router.route('/concerts/:id').put((req, res) => {
-  const element = db.concerts.filter(
-    (element) => element.id === parseInt(req.params.id)
-  );
-  const index = db.concerts.indexOf(element);
-  const concert = {
-    id: req.params.id,
-    author: req.body.author,
-    performer: req.body.performer,
-    genre: req.body.genre,
-    price: req.body.price,
-    day: req.body.day,
-    image: req.body.image,
-  };
-  db.concerts.splice(index, 1, concert);
+  filterDB(req.params.id).forEach(content => {
+    content.performer = req.body.performer;
+    content.genre = req.body.genre;
+    content.price = req.body.price;
+    content.day = req.body.day;
+    content.image = req.body.image;
+  });
 
-  return res.json({ message: 'OK' });
+  res.json({message: 'OK'});
 });
 
 router.route('/concerts/:id').delete((req, res) => {

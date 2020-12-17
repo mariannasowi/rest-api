@@ -3,6 +3,10 @@ const router = express.Router();
 const db = require('../db');
 const { v4: uuidv4 } = require('uuid');
 
+const filterDB = id => (
+  db.testimonials.filter(content => content.id == id)
+);
+
 router.route('/testimonials').get((req, res) => {
     res.send(db.testimonials);
 });
@@ -33,18 +37,12 @@ router.route('/testimonials').post((req, res) => {
   });
 
 router.route('/testimonials/:id').put((req, res) => {
-  const element = db.testimonials.filter(
-    (element) => element.id === parseInt(req.params.id)
-  );
-  const index = db.testimonials.indexOf(element);
-  const testimonial = {
-    id: req.params.id,
-    author: req.body.author,
-    text: req.body.text,
-  };
-  db.testimonials.splice(index, 1, testimonial);
+  filterDB(req.params.id).forEach(content => {
+    content.author = req.body.author;
+    content.text = req.body.text;
+  });
 
-  return res.json({ message: 'OK' });
+  res.json({message: 'OK'});
 });
 
 router.route('/testimonials/:id').delete((req, res) => {
