@@ -36,8 +36,8 @@ router.route('/concerts').post((req, res) => {
 });
 
 router.route('/concerts/:id').put((req, res) => {
-  const element = db.concerts.filter(
-    (element) => element.id === parseInt(req.params.id)
+  db.concerts = db.concerts.filter(
+    (element) => element.id !== parseInt(req.params.id)
   );
   const index = db.concerts.indexOf(element);
   const concert = {
@@ -55,11 +55,9 @@ router.route('/concerts/:id').put((req, res) => {
 });
 
 router.route('/concerts/:id').delete((req, res) => {
-  const element = db.concerts.filter(
-    (element) => element.id === parseInt(req.params.id)
+  db.concerts = db.concerts.filter(
+    (element) => element.id !== parseInt(req.params.id)
   );
-  const index = db.concerts.indexOf(element);
-  db.concerts.splice(index, 1);
 
   return res.json({ message: 'OK' });
 });

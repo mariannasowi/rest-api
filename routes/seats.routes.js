@@ -52,11 +52,9 @@ router.route('/seats/:id').put((req, res) => {
 });
 
 router.route('/seats/:id').delete((req, res) => {
-  const element = db.seats.filter(
-    (element) => element.id === parseInt(req.params.id)
+  db.seats = db.seats.filter(
+    (element) => element.id !== parseInt(req.params.id)
   );
-  const index = db.seats.indexOf(element);
-  db.seats.splice(index, 1);
 
   return res.json({ message: 'OK' });
 });

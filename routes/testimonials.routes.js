@@ -48,11 +48,9 @@ router.route('/testimonials/:id').put((req, res) => {
 });
 
 router.route('/testimonials/:id').delete((req, res) => {
-    const element = db.filter(
-      (element) => element.id === parseInt(req.params.id)
-    );
-    const index = db.indexOf(element);
-    db.splice(index, 1);
+  db.testimonials = db.testimonials.filter(
+    (element) => element.id !== parseInt(req.params.id)
+  );
 
     return res.json({ message: 'OK' });
   });
