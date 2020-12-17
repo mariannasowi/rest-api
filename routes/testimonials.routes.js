@@ -33,18 +33,18 @@ router.route('/testimonials').post((req, res) => {
   });
 
 router.route('/testimonials/:id').put((req, res) => {
-    const element = db.testimonials.filter(
-      (element) => element.id === parseInt(req.params.id)
-    );
-    const index = db.testimonials.indexOf(element);
-    const testimonial = {
-      id: req.params.id,
-      author: req.body.author,
-      text: req.body.text,
-    };
-    db.testimonials.splice(index, 1, testimonial);
+  const element = db.testimonials.filter(
+    (element) => element.id === parseInt(req.params.id)
+  );
+  const index = db.testimonials.indexOf(element);
+  const testimonial = {
+    id: req.params.id,
+    author: req.body.author,
+    text: req.body.text,
+  };
+  db.testimonials.splice(index, 1, testimonial);
 
-    return res.json({ message: 'OK' });
+  return res.json({ message: 'OK' });
 });
 
 router.route('/testimonials/:id').delete((req, res) => {

@@ -36,8 +36,8 @@ router.route('/concerts').post((req, res) => {
 });
 
 router.route('/concerts/:id').put((req, res) => {
-  db.concerts = db.concerts.filter(
-    (element) => element.id !== parseInt(req.params.id)
+  const element = db.concerts.filter(
+    (element) => element.id === parseInt(req.params.id)
   );
   const index = db.concerts.indexOf(element);
   const concert = {
