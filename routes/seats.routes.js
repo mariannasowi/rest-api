@@ -35,7 +35,7 @@ router.route('/seats').post((req, res) => {
       client: req.body.client,
       email: req.body.email,
     });
-    es.json({message: 'OK'});
+    res.json({message: 'OK'});
   }
 });
 
