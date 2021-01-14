@@ -37,7 +37,7 @@ app.use((req, res) => {
 });
 
 // connects our backend code with the database
-const dbURI = process.env.NODE_ENV === 'production' ? `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ognet.mongodb.net/NewWaveDB?retryWrites=true&w=majority` : 'mongodb://localhost:27017/NewWaveDB';
+const dbURI = process.env.NODE_ENV === 'production' ? `mongodb+srv://mariannasowi:<password>@cluster0.budel.mongodb.net/<dbname>?retryWrites=true&w=majority` : 'mongodb://localhost:27017/NewWaveDB';
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true});
 const db = mongoose.connection;
 
