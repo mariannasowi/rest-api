@@ -1,39 +1,59 @@
 const express = require('express');
-const db = require('./db');
-const testimonialsRoutes = require('./routes/testimonials.routes');
-const concertsRoutes = require('./routes/concerts.routes');
-const seatsRoutes = require('./routes/seats.routes');
+const app = express();
 const cors = require('cors');
 const path = require('path');
-const app = express();
 const socket = require('socket.io');
+const mongoose = require('mongoose');
+const helmet = require('helmet');
+
+//routes
+const concertsRoutes = require('./routes/concerts.routes');
+const seatsRoutes = require('./routes/seats.routes');
+const testimonialsRoutes = require('./routes/testimonials.routes')
 
 app.use((req, res, next) => {
-  req.io = io;
-  next();
+    req.io = io;
+    next();
 });
+
+//middleware
+app.use(helmet());
 app.use(cors());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '/client/build')));
-app.use('/api/', testimonialsRoutes);
-app.use('/api/', concertsRoutes);
-app.use('/api/', seatsRoutes);
+
+app.use('/api', concertsRoutes); // add concert routes to server
+app.use('/api', seatsRoutes);
+app.use('/api', testimonialsRoutes);
+
+app.use(express.static(path.join(__dirname + '/client/build')));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '/client/build/index.html'));
+    res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
 app.use((req, res) => {
-    res.status(404).send({ message: 'Not found...' });
+    res.status(404).json({message: 'Not found...'});
 });
 
+// connects our backend code with the database
+const dbURI = process.env.NODE_ENV === 'production' ? `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ognet.mongodb.net/NewWaveDB?retryWrites=true&w=majority` : 'mongodb://localhost:27017/NewWaveDB';
+mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true});
+const db = mongoose.connection;
+
+db.once('open', () => {
+    console.log('Connected to the database');
+});
+db.on('error', err => console.log('Error ' + err));
+
 const server = app.listen(process.env.PORT || 8000, () => {
-  console.log('Server is running on port: 8000');
+    console.log('Server is running on port: 8000');
 });
 
 const io = socket(server);
 
 io.on('connection', (socket) => {
-  console.log('New socket!');
+    console.log('New socket!');
 });
+
+module.exports = server;
