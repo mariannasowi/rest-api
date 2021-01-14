@@ -4,6 +4,7 @@ import { Button, Form, FormGroup, Label, Input, Row, Col, Alert, Progress } from
 import './OrderTicketForm.scss';
 import SeatChooser from './../SeatChooser/SeatChooserContainer';
 
+
 class OrderTicketForm extends React.Component {
 
   state = {
@@ -20,33 +21,35 @@ class OrderTicketForm extends React.Component {
     const { order } = this.state;
 
     e.preventDefault();
-    this.setState({ order: { ...order, seat: seatId }});
+    this.setState({ order: { ...order, seat: seatId } });
   }
 
   updateTextField = ({ target }) => {
     const { order } = this.state;
     const { value, name } = target;
 
-    this.setState({ order: { ...order, [name]: value }});
+    this.setState({ order: { ...order, [name]: value } });
   }
 
   updateNumberField = ({ target }) => {
     const { order } = this.state;
     const { value, name } = target;
 
-    this.setState({ order: { ...order, [name]: parseInt(value) }});
+    this.setState({ order: { ...order, [name]: parseInt(value) } });
   }
 
   submitForm = async (e) => {
     const { order } = this.state;
-    const { addSeat, loadSeats } = this.props;
+    const { addSeat } = this.props;
+
+
 
     e.preventDefault();
 
-    if(order.client && order.email && order.day && order.seat) {
+    if (order.client && order.email && order.day && order.seat) {
       await addSeat(order);
-      loadSeats();
-      this.setState({ 
+      // loadSeats();
+      this.setState({
         order: {
           client: '',
           email: '',
@@ -70,10 +73,10 @@ class OrderTicketForm extends React.Component {
       <Form className="order-ticket-form" onSubmit={submitForm}>
         <Row>
           <Col xs="12" md="6">
-            { (isError) && <Alert color="warning">There are some errors in you form. Have you fill all the fields? Maybe you forgot to choose your seat?</Alert> }
-            { (requests['ADD_SEAT'] && requests['ADD_SEAT'].error && !isError) && <Alert color="danger">{requests['ADD_SEAT'].error}</Alert> }
-            { (requests['ADD_SEAT'] && requests['ADD_SEAT'].success && !isError) && <Alert color="success">You've booked your ticket! Check you email in order to make a payment.</Alert> }
-            { (requests['ADD_SEAT'] && requests['ADD_SEAT'].pending) && <Progress animated className="mb-5" color="primary" value={75} /> }
+            {(isError) && <Alert color="warning">There are some errors in you form. Have you fill all the fields? Maybe you forgot to choose your seat?</Alert>}
+            {(requests['ADD_SEAT'] && requests['ADD_SEAT'].error && !isError) && <Alert color="danger">{requests['ADD_SEAT'].error}</Alert>}
+            {(requests['ADD_SEAT'] && requests['ADD_SEAT'].success && !isError) && <Alert color="success">You've booked your ticket! Check you email in order to make a payment.</Alert>}
+            {(requests['ADD_SEAT'] && requests['ADD_SEAT'].pending) && <Progress animated className="mb-5" color="primary" value={75} />}
             <FormGroup>
               <Label for="clientEmail">Name</Label>
               <Input type="text" value={order.client} name="client" onChange={updateTextField} id="clientName" placeholder="John Doe" />
@@ -93,15 +96,15 @@ class OrderTicketForm extends React.Component {
             </FormGroup>
             <FormGroup check>
               <Label check>
-                <Input required type="checkbox" /> I agree with <a href="/#">Terms and conditions</a> and <a href="/#">Privacy Policy</a>.
+                <Input required type="checkbox" /> I agree with <a href="#">Terms and conditions</a> and <a href="#">Privacy Policy</a>.
               </Label>
             </FormGroup>
             <Button color="primary" className="mt-3">Submit</Button>
           </Col>
           <Col xs="12" md="6">
-            <SeatChooser 
+            <SeatChooser
               chosenDay={order.day}
-              chosenSeat={order.seat} 
+              chosenSeat={order.seat}
               updateSeat={updateSeat} />
           </Col>
         </Row>
