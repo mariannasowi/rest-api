@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "cd client && yarn install && yarn build",
-    "test": "set NODE_ENV=production && mocha \"./{,!(node_modules)/**/}*.test.js\"",
+    "test": "set NODE_ENV=production && mocha \"./{,!(node_modules)/**/}*.test.js\" mocha --watch \"./**/*.test.js\"",
     "test:watch": "onchange \"./**/*.js\" -i -k -- yarn test"
   },
   "dependencies": {
